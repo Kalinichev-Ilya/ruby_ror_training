@@ -4,21 +4,11 @@
 # Программа должна запрашивать основание и высоту треуголиника
 # и возвращать его площадь.
 
-class AreaOfTriangle
-  def initialize(a, h)
-    @a = a
-    @h = h
-  end
-
-  def area
-    1.0 / (2 * @a * @h)
-  end
-end
-
 puts 'Please input base of triangle:'
-a = gets.chomp.to_i
-puts 'Please input base of triangle:'
-h = gets.chomp.to_i
+a = gets.chomp.to_f
+puts 'Please input height of triangle:'
+h = gets.chomp.to_f
 
-triangle = AreaOfTriangle.new(a, h)
-print triangle.area
+result = 0.5 * a * h
+
+puts "Area of a triangle: #{result}."
