@@ -1,7 +1,6 @@
 # Make a hash that contains months and the number
 # of days in a month. In the cycle, output those
 # months, in which the number of days is exactly 30.
-puts 'Task 1'
 
 months = {
   January: 31,
