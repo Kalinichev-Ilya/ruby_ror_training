@@ -1,6 +1,3 @@
-class NegativeDiscriminant < StandardError
-end
-
 # Quadratic equation
 puts 'Hello! Input three numbers (a, b, c).'
 numbers = (0..2).collect { gets.chomp.to_f }
