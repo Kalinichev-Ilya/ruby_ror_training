@@ -23,7 +23,7 @@ def leap?(year)
 end
 
 puts result += if leap?(year)
-                 days + 1
+                 days + 1 if month > 1
                else
                  days
                end
