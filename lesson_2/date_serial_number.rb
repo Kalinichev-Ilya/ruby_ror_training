@@ -10,24 +10,20 @@ days = data[0].to_i
 month = data[1].to_i
 year = data[2].to_i
 
-# find count of days by month number
-def count_of_days_in(month)
-  28 + (month + (month / 8)) % 2 + 2 % month + 2 * (1 / month)
-end
-
+days_in_months = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
 # find count of days in all months
 result = 0
-(1..month).each do |_res_count_days|
-  result += count_of_days_in(month)
+days_in_months.length.times do |num|
+  result += days_in_months[num] if num < month - 1
 end
 
-# if year is leap +1 day
-divided_into_four = (year % 4).zero?
-not_divided_into_one_hundred = year % 100 != 0
+def leap?(year)
+  ((year % 4).zero? && year % 100 != 0) || (year % 4).zero?
+end
 
-puts result += if (divided_into_four && not_divided_into_one_hundred) || divided_into_four
+puts result += if leap?(year)
                  days + 1
                else
                  days
-          end
+               end
