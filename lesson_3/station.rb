@@ -1,31 +1,18 @@
 # Station entity
 class Station
-  attr_reader :name
+  attr_reader :name, :trains
 
   def initialize(name, trains = [])
     @name = name
     @trains = trains
   end
 
-  # add train
   def add_train(train)
     @trains << train
   end
 
-  # return list of trains
-  def train_list
-    @trains
-  end
-
-  # return list of trains by type
-  def trains_by_type
-    cargo = []
-    passenger = []
-    @trains.each do |train|
-      cargo << train if train.type == 'cargo'
-      passenger << train if train.type == 'passenger'
-    end
-    { cargo: cargo, passenger: passenger }
+  def trains_by_type(type)
+    @trains.select { |train| train.type == type }
   end
 
   def move(train)
