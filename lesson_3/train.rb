@@ -1,7 +1,7 @@
 # Train entity
 class Train
   attr_accessor :route
-  attr_reader :speed, :wagons_count, :station, :type
+  attr_reader :speed, :wagons_count, :type
 
   def initialize(number, type, wagons_count, route)
     @number = number
@@ -13,7 +13,11 @@ class Train
   end
 
   def accelerate(speed = 0)
-    @speed = speed
+    if @speed + speed > 0
+      @speed += speed
+    else
+      puts "Speed can't be negative. Speed is #{@speed + speed}."
+    end
   end
 
   def brake
@@ -21,32 +25,46 @@ class Train
   end
 
   def add_wagon
-    @wagons_count + 1 if @speed.zero?
-    puts 'You need to stop the train.' unless @speed.zero?
-  end
-
-  def route=(route)
-    @route = route
-    @station = route.stations[0]
+    if @speed.zero?
+      @wagons_count + 1
+    else
+      puts "You need to stop the train. You speed is #{@speed}."
+    end
   end
 
   def current_station
-    @station = @route.stations[@station_index]
+    @route.stations[@station_index]
   end
 
   def go_to_the_next_station
-    @station = @route.stations[@station_index + 1]
+    if @station_index < @route.stations.count
+      @station_index += 1
+    else
+      puts "We at the #{@station_index} station, have nowhere to go."
+    end
   end
 
   def go_to_the_previous_station
-    @station = @route.stations[@station_index - 1]
+    if @station_index != 0
+      @station_index -= 1
+    else
+      puts "We at the #{@station_index} station, have nowhere to go."
+    end
   end
 
   def next_station
-    @route.stations[@station_index + 1]
+    if @station_index + 1 > 0
+      @route.stations[@station_index + 1]
+    else
+      puts "End of route. #{@station_index} station."
+    end
   end
 
   def previous_station
-    @route.stations[@station_index - 1]
+    if @station_index != 0
+      @route.stations[@station_index - 1]
+    else
+      puts 'No previous station.'
+    end
   end
 end
