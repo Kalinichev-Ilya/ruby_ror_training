@@ -1,22 +1,22 @@
 # Route entity
 class Route
-  def initialize(departure, arrival, stations = [])
-    @departure = departure
-    @arrival = arrival
+  attr_reader :stations
+
+  def initialize(stations = [])
     @stations = stations
   end
 
-  def add(station)
-    @stations << station
+  def add_station(station)
+    @stations.insert(-2, station)
   end
 
-  def delete(station)
-    @stations.delete station
-  end
+  def delete_station(station)
+    index = @stations.index(station)
 
-  def stations
-    @stations.unshift @departure
-    @stations << @arrival
-    @stations
+    if index.zero? || index == @stations.count - 1
+      puts "You can't delete the first or last station."
+    else
+      @stations.delete
+    end
   end
 end
