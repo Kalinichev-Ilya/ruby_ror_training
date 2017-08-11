@@ -11,12 +11,14 @@ class Route
   end
 
   def delete_station(station)
-    index = @stations.index(station)
+    @stations.delete station unless first_station? || last_station?(station)
+  end
 
-    if index.zero? || index == @stations.count - 1
-      puts "You can't delete the first or last station."
-    else
-      @stations.delete
-    end
+  def first_station?
+    index.zero?
+  end
+
+  def last_station?(station)
+    @stations.index(station) == @stations.count - 1
   end
 end
