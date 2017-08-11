@@ -1,7 +1,6 @@
 # Train entity
 class Train
-  attr_accessor :route
-  attr_reader :speed, :wagons_count, :type
+  attr_reader :speed, :wagons_count, :type, :route
 
   def initialize(number, type, wagons_count, route)
     @number = number
@@ -12,12 +11,17 @@ class Train
     @station_index = 0
   end
 
-  def accelerate(speed = 0)
-    if @speed + speed > 0
-      @speed += speed
+  def accelerate(speed)
+    if @speed + speed < 0
+      @speed = 0
     else
-      puts "Speed can't be negative. Speed is #{@speed + speed}."
+      @speed += speed
     end
+  end
+
+  def route=(route)
+    @station_index = 0
+    @route = route
   end
 
   def brake
@@ -25,11 +29,7 @@ class Train
   end
 
   def add_wagon
-    if @speed.zero?
-      @wagons_count + 1
-    else
-      puts "You need to stop the train. You speed is #{@speed}."
-    end
+    @speed.zero? ? @wagons_count + 1 : false
   end
 
   def current_station
@@ -37,34 +37,28 @@ class Train
   end
 
   def go_to_the_next_station
-    if @station_index < @route.stations.count
-      @station_index += 1
-    else
-      puts "We at the #{@station_index} station, have nowhere to go."
-    end
+    last_station? ? @station_index += 1 : false
   end
 
   def go_to_the_previous_station
-    if @station_index != 0
-      @station_index -= 1
-    else
-      puts "We at the #{@station_index} station, have nowhere to go."
-    end
+    first_station? ? false : @station_index -= 1
   end
 
   def next_station
-    if @station_index + 1 > 0
-      @route.stations[@station_index + 1]
-    else
-      puts "End of route. #{@station_index} station."
-    end
+    last_station? ? @route.stations[@station_index + 1] : false
   end
 
   def previous_station
-    if @station_index != 0
-      @route.stations[@station_index - 1]
-    else
-      puts 'No previous station.'
-    end
+    first_station? ? false : @route.stations[@station_index - 1]
+  end
+
+  private
+
+  def last_station?
+    @station_index < @route.stations.count - 1
+  end
+
+  def first_station?
+    @station_index.zero?
   end
 end
