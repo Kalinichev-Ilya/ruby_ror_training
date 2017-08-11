@@ -1,8 +1,8 @@
 # Train entity
 class Train
-  attr_reader :speed, :wagons_count, :type, :route
+  attr_reader :number, :type, :wagons_count, :route, :speed, :station_index
 
-  def initialize(number, type, wagons_count, route)
+  def initialize(number, type, wagons_count, route = nil)
     @number = number
     @type = type
     @wagons_count = wagons_count
@@ -29,15 +29,15 @@ class Train
   end
 
   def add_wagon
-    @speed.zero? ? @wagons_count + 1 : false
+    @speed.zero? ? @wagons_count += 1 : false
   end
-
-  def current_station
-    @route.stations[@station_index]
+  
+  def remove_wagon
+    @speed.zero? ? @wagons_count -= 1 : false
   end
 
   def go_to_the_next_station
-    last_station? ? @station_index += 1 : false
+    last_station? ? false : @station_index += 1
   end
 
   def go_to_the_previous_station
@@ -45,7 +45,7 @@ class Train
   end
 
   def next_station
-    last_station? ? @route.stations[@station_index + 1] : false
+    last_station? ? false : @route.stations[@station_index + 1]
   end
 
   def previous_station
@@ -55,7 +55,7 @@ class Train
   private
 
   def last_station?
-    @station_index < @route.stations.count - 1
+    @station_index == @route.stations.count - 1
   end
 
   def first_station?
