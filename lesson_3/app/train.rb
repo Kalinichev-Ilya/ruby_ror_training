@@ -12,11 +12,7 @@ class Train
   end
 
   def accelerate(speed)
-    if @speed + speed < 0
-      @speed = 0
-    else
-      @speed += speed
-    end
+    @speed = [0, @speed + speed].max
   end
 
   def route=(route)
@@ -29,27 +25,27 @@ class Train
   end
 
   def add_wagon
-    @speed.zero? ? @wagons_count += 1 : false
+    @wagons_count += 1 if @speed.zero?
   end
-  
+
   def remove_wagon
-    @speed.zero? ? @wagons_count -= 1 : false
+    @wagons_count -= 1 if @speed.zero?
   end
 
   def go_to_the_next_station
-    last_station? ? false : @station_index += 1
+    @station_index += 1 unless last_station?
   end
 
   def go_to_the_previous_station
-    first_station? ? false : @station_index -= 1
+    @station_index -= 1 unless first_station?
   end
 
   def next_station
-    last_station? ? false : @route.stations[@station_index + 1]
+    @route.stations[@station_index + 1] unless last_station?
   end
 
   def previous_station
-    first_station? ? false : @route.stations[@station_index - 1]
+    @route.stations[@station_index - 1] unless first_station?
   end
 
   private

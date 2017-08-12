@@ -40,7 +40,7 @@ describe 'Train' do
     end
     
     it 'try to find the previous station' do
-      expect(@train.previous_station).to eq false
+      expect(@train.previous_station).to eq nil
     end
     
     it 'try to find the next station' do
@@ -54,15 +54,15 @@ describe 'Train' do
     end
     
     it 'add wagon' do
-      expect(@train.add_wagon).to eq false
+      expect(@train.add_wagon).to eq nil
     end
     
     it 'remove wagon' do
-      expect(@train.remove_wagon).to eq false
+      expect(@train.remove_wagon).to eq nil
     end
     
     it 'go to the previous station' do
-      expect(@train.go_to_the_previous_station).to eq false
+      expect(@train.go_to_the_previous_station).to eq nil
     end
     
     it 'go to the next station' do
