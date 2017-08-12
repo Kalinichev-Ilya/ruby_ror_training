@@ -29,7 +29,7 @@ class Train
   end
 
   def remove_wagon
-    @wagons_count -= 1 if @speed.zero?
+    @wagons_count -= 1 if @speed.zero? && @wagons_count > 0
   end
 
   def go_to_the_next_station
