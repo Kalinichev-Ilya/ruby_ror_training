@@ -115,8 +115,11 @@ loop do
               route_index = Helper.choose_a_route(@routes)
               station_index = Helper.choose_a_station(@stations)
               
-              @routes[route_index].add_station(@stations[station_index])
-              @routes[route_index].stations.each { |station| print "#{station.name} " }
+              route = @routes[route_index]
+              station = @stations[station_index]
+              
+              route.add_station(station)
+              route.stations.each { |station| print "#{station.name} " }
               puts ''
             end
           else
@@ -132,8 +135,11 @@ loop do
             @routes[route_index].stations.each_with_index { |station, index| puts "#{station.name} : #{index}" }
             station_index = gets.chomp.to_i
             
-            @routes[route_index].delete_station(@routes[route_index].stations[station_index])
-            @routes[route_index].stations.each { |station| print "#{station.name} " }
+            route = @routes[route_index]
+            station = @routes[route_index].stations[station_index]
+            
+            route.delete_station(station)
+            route.stations.each { |station| print "#{station.name} " }
           else
             puts "Do not enough routes or stations; routes: #{@routes.count}, stations: #{@stations.count}"
           end
@@ -194,7 +200,9 @@ loop do
       if @trains.any?
         train_index = Helper.choose_a_train(@trains)
         
-        @trains[train_index].remove_wagon
+        train = @trains[train_index]
+        
+        train.remove_wagon
       else
         puts "First create a train, trains count: #{@trains.count}"
       end
