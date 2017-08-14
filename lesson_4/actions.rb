@@ -137,7 +137,7 @@ class Actions
             show_list(@trains)
             train_index = gets.chomp.to_i
             train = @trains[train_index]
-            if train.route.any?
+            if train.route.stations.any?
               puts 'Where we go?'
               puts 'forward movement: 1, backward movement: 2'
               input = gets.chomp.to_i
