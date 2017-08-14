@@ -2,7 +2,9 @@ require_relative 'wagon'
 
 # Cargo wagon entity
 class CargoWagon < Wagon
+  attr_reader :type
+  
   def initialize
-    @type = 'cargo'
+    @type = CargoTrain
   end
 end

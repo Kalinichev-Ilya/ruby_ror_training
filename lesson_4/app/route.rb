@@ -14,8 +14,8 @@ class Route
     @stations.delete(station) unless first_station?(station) || last_station?(station)
   end
   
-  def print
-    "#{@stations[0].name} - #{@stations[-1].name}"
+  def to_s
+    "#{@stations[0].name.capitalize} - #{@stations[-1].name.capitalize}"
   end
   
   protected

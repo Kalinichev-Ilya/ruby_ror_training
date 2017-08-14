@@ -1,10 +1,9 @@
 # Train entity
 class Train
-  attr_reader :number, :type, :wagons, :route, :speed, :station_index
+  attr_reader :number, :wagons, :route, :speed, :station_index
 
   def initialize(number)
     @number = number
-    @type = ''
     @route = nil
     @wagons = []
     @speed = 0
@@ -25,11 +24,11 @@ class Train
   end
 
   def add_wagon(wagon)
-    @wagons << wagon if @speed.zero? && @type == wagon.type
+    @wagons << wagon if @speed.zero? && same_type?(wagon)
   end
 
   def remove_wagon
-    @wagons.pop if @speed.zero? && @wagons.any?
+    @wagons.pop if @speed.zero? && @wagons.count > 0
   end
 
   def go_to_the_next_station
@@ -43,23 +42,31 @@ class Train
   def current_station
     @route.stations[@station_index]
   end
-  
+
   def next_station
-    @route.stations[@station_index + 1]
+    @route.stations[@station_index + 1] unless last_station?
   end
 
   def previous_station
-    @route.stations[@station_index - 1]
+    @route.stations[@station_index - 1] unless first_station?
   end
 
-  protected
+  def to_s
+    "#{number.upcase}"
+  end
 
   # used only in class
+  protected
+  
   def last_station?
     @station_index == @route.stations.count - 1
   end
 
   def first_station?
-    @station_index.zero?
+    @station_index - 1 < 0
+  end
+
+  def same_type?(wagon)
+    self.class == wagon.type
   end
 end

@@ -12,10 +12,14 @@ class Station
   end
   
   def trains_by_type(type)
-    @trains.select { |train| train.type == type }
+    @trains.select { |train| train.class == type }
   end
   
   def move(train)
     @trains.delete train
+  end
+  
+  def to_s
+    "#{name.capitalize}"
   end
 end
