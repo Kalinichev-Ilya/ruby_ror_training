@@ -9,9 +9,5 @@ require_relative 'dependencies'
 # - Перемещать поезд по маршруту вперед и назад
 # - Просматривать список станций и список поездов на станции
 
-routes = []
-stations = []
-trains = []
-
-action = Actions.new(routes, stations, trains)
-action.run
+program = Program.new
+program.run

@@ -1,9 +1,9 @@
 # Menu
-class Actions
-  def initialize(routes, stations, trains)
-    @routes = routes
-    @stations = stations
-    @trains = trains
+class Program
+  def initialize
+    @routes = []
+    @stations = []
+    @trains = []
   end
   
   def run
