@@ -21,156 +21,201 @@ class Program
       input = gets.chomp
       
       case input
-        # Create a train
         when '1'
-          puts 'Enter the train number:'
-          number = gets.chomp
-          puts 'Choose type: 1 for cargo, 2 for passenger:'
-          type = gets.chomp.to_i
-          create_train(number, type)
-        # Create a route, station management
+          create_train_interface
         when '2'
-          puts '1. Create a route'
-          puts '2. Delete a route'
-          puts '3. Add station'
-          puts '4. Remove station'
-          puts '5. Create station'
-          input = gets.chomp.to_i
-          
-          case input
-            # Create a route
-            when 1
-              while @stations.count < 2
-                puts 'There are not enough stations'
-                name = get_station_name
-                create_station(name)
-              end
-              show_list(@stations)
-              puts 'Select the start station'
-              start = gets.chomp.to_i
-              puts 'Select the end station'
-              _end = gets.chomp.to_i
-              create_route(@stations[start], @stations[_end])
-              show_list(@routes)
-            # Delete a route
-            when 2
-              if @routes.any?
-                show_list(@routes)
-                puts ''
-                puts 'Select the route index to delete'
-                number = gets.chomp.to_i
-                delete_route(number)
-                show_list(@routes)
-              else
-                puts 'Nothing to delete'
-              end
-            # Add station
-            when 3
-              if @routes.any?
-                if @stations.count.zero?
-                  puts 'Do not enough stations'
-                  puts 'Enter the name of station.'
-                  name = gets.chomp
-                  create_station(name)
-                  show_list(@stations)
-                else
-                  show_list(@routes)
-                  route_index = gets.chomp.to_i
-                  show_list(@stations)
-                  station_index = gets.chomp.to_i
-                  add_station_to_route(route_index, station_index)
-                  show_list(@routes[route_index].stations)
-                end
-              else
-                puts 'First create a route'
-              end
-            # Remove station
-            when 4
-              if @routes.any? && @stations.any?
-                show_list(@routes)
-                route_index = gets.chomp.to_i
-                show_list(@routes[route_index].stations)
-                station_index = gets.chomp.to_i
-                remove_station_from_route(route_index, station_index)
-                show_list(@routes[route_index].stations)
-              else
-                puts "Do not enough routes or stations; routes: #{@routes.count}, stations: #{@stations.count}"
-              end
-            # Create station
-            when 5
-              name = get_station_name
-              create_station(name)
-              show_list(@stations)
-          end
-        # Assign a route
+          create_route_and_station_management_interface
         when '3'
-          if @trains.any? && @routes.any?
-            show_list(@routes)
-            route_index = gets.chomp.to_i
-            show_list(@trains)
-            train_index = gets.chomp.to_i
-            assign_train_on_route(route_index, train_index)
-          else
-            puts "First create a train or route; trains: #{@trains.count}, routes: #{@routes.count}"
-          end
-        # Add wagon to train
+          assign_route_to_train_interface
         when '4'
-          if @trains.any?
-            show_list(@trains)
-            train_index = gets.chomp.to_i
-            add_wagon_to_train(train_index)
-          else
-            puts 'First create a train'
-          end
-        # Remove wagon from train
+          add_wagon_to_train_interface
         when '5'
-          if @trains.any?
-            show_list(@trains)
-            train_index = gets.chomp.to_i
-            remove_wagon_from_train(train_index)
-          else
-            puts "First create a train, trains count: #{@trains.count}"
-          end
-        # Move train on the road
+          remove_wagon_from_train_interface
         when '6'
-          if @trains.any?
-            show_list(@trains)
-            train_index = gets.chomp.to_i
-            train = @trains[train_index]
-            if train.route.stations.any?
-              puts 'Where we go?'
-              puts 'forward movement: 1, backward movement: 2'
-              input = gets.chomp.to_i
-              move_train_to_the_next_station(train_index) if input.eql? 1
-              move_train_to_the_previous_station(train_index) if input.eql? 2
-            else
-              puts 'First assign route for this train'
-            end
-          else
-            puts "First create a train, trains count: #{@trains.count}"
-          end
+          move_train_on_the_route_interface
         # Show station list
         when '7'
-          if @stations.any?
-            show_list(@stations)
-          else
-            puts "First create a stations, stations count: #{@stations.count}"
-          end
-        # Show train list on station
+          show_station_list_interface
         when '8'
-          if @stations.any? && @trains.any?
-            show_list(@stations)
-            station_index = gets.chomp.to_i
-            show_trains_on_station(station_index)
-          else
-            puts "First create a stations and train, stations: #{@stations.count}, trains: #{@trains.count}"
-          end
+          show_trains_on_station_by_type_interface
       end
       break if input == 'q'
     end
   end
   
   private
+  
+  def show_trains_on_station_by_type_interface
+    if @stations.any? && @trains.any?
+      show_list(@stations)
+      station_index = gets.chomp.to_i
+      show_trains_on_station(station_index)
+    else
+      puts "First create a stations and train, stations: #{@stations.count}, trains: #{@trains.count}"
+    end
+  end
+  
+  def show_station_list_interface
+    if @stations.any?
+      show_list(@stations)
+    else
+      puts "First create a stations, stations count: #{@stations.count}"
+    end
+  end
+  
+  def move_train_on_the_route_interface
+    if @trains.any?
+      show_list(@trains)
+      train_index = gets.chomp.to_i
+      train = @trains[train_index]
+      if train.route.stations.any?
+        puts 'Where we go?'
+        puts 'forward movement: 1, backward movement: 2'
+        input = gets.chomp.to_i
+        move_train_to_the_next_station(train_index) if input.eql? 1
+        move_train_to_the_previous_station(train_index) if input.eql? 2
+      else
+        puts 'First assign route for this train'
+      end
+    else
+      puts "First create a train, trains count: #{@trains.count}"
+    end
+  end
+  
+  def remove_wagon_from_train_interface
+    if @trains.any?
+      show_list(@trains)
+      train_index = gets.chomp.to_i
+      remove_wagon_from_train(train_index)
+    else
+      puts "First create a train, trains count: #{@trains.count}"
+    end
+  end
+  
+  def add_wagon_to_train_interface
+    if @trains.any?
+      show_list(@trains)
+      train_index = gets.chomp.to_i
+      add_wagon_to_train(train_index)
+    else
+      puts 'First create a train'
+    end
+  end
+  
+  def assign_route_to_train_interface
+    if @trains.any? && @routes.any?
+      show_list(@routes)
+      route_index = gets.chomp.to_i
+      show_list(@trains)
+      train_index = gets.chomp.to_i
+      assign_train_on_route(route_index, train_index)
+    else
+      puts "First create a train or route; trains: #{@trains.count}, routes: #{@routes.count}"
+    end
+  end
+  
+  def create_route_and_station_management_interface
+    puts '1. Create a route'
+    puts '2. Delete a route'
+    puts '3. Add station'
+    puts '4. Remove station'
+    puts '5. Create station'
+    input = gets.chomp.to_i
+    
+    case input
+      # Create a route
+      when 1
+        create_route_interface
+      # Delete a route
+      when 2
+        delete_route_interface
+      # Add station
+      when 3
+        add_station_to_route_interface
+      # Remove station
+      when 4
+        remove_station_from_route_interface
+      # Create station
+      when 5
+        create_station_interface
+    end
+  end
+  
+  def create_station_interface
+    name = get_station_name
+    create_station(name)
+    show_list(@stations)
+  end
+  
+  def remove_station_from_route_interface
+    if @routes.any? && @stations.any?
+      show_list(@routes)
+      route_index = gets.chomp.to_i
+      show_list(@routes[route_index].stations)
+      station_index = gets.chomp.to_i
+      remove_station_from_route(route_index, station_index)
+      show_list(@routes[route_index].stations)
+    else
+      puts "Do not enough routes or stations; routes: #{@routes.count}, stations: #{@stations.count}"
+    end
+  end
+  
+  def add_station_to_route_interface
+    if @routes.any?
+      if @stations.count.zero?
+        puts 'Do not enough stations'
+        puts 'Enter the name of station.'
+        name = gets.chomp
+        create_station(name)
+        show_list(@stations)
+      else
+        show_list(@routes)
+        route_index = gets.chomp.to_i
+        show_list(@stations)
+        station_index = gets.chomp.to_i
+        add_station_to_route(route_index, station_index)
+        show_list(@routes[route_index].stations)
+      end
+    else
+      puts 'First create a route'
+    end
+  end
+  
+  def delete_route_interface
+    if @routes.any?
+      show_list(@routes)
+      puts ''
+      puts 'Select the route index to delete'
+      number = gets.chomp.to_i
+      delete_route(number)
+      show_list(@routes)
+    else
+      puts 'Nothing to delete'
+    end
+  end
+  
+  def create_route_interface
+    while @stations.count < 2
+      puts 'There are not enough stations'
+      name = get_station_name
+      create_station(name)
+    end
+    show_list(@stations)
+    puts 'Select the start station'
+    start = gets.chomp.to_i
+    puts 'Select the end station'
+    _end = gets.chomp.to_i
+    create_route(@stations[start], @stations[_end])
+    show_list(@routes)
+  end
+  
+  def create_train_interface
+    puts 'Enter the train number:'
+    number = gets.chomp
+    puts 'Choose type: 1 for cargo, 2 for passenger:'
+    type = gets.chomp.to_i
+    create_train(number, type)
+  end
   
   def get_station_name
     puts 'Enter the name of station.'
