@@ -8,7 +8,7 @@ class Train
   class << self
     attr_accessor :trains
   end
-  @trains = {}
+  @trains = []
   
   def initialize(number)
     @number = number
@@ -16,11 +16,11 @@ class Train
     @wagons = []
     @speed = 0
     @station_index = 0
-    self.class.trains[number] = self
+    self.class.trains << self
   end
   
-  def self.find(_number)
-    @trains.select { |train| train[_number] }
+  def self.find(number)
+    @trains.select { |train| train.number == number }
   end
   
   def accelerate(speed)

@@ -10,11 +10,8 @@ module InstanceCounter
   
   module InstanceMethods
     def register_instance
-      if self.class.instances
-        self.class.instances += 1
-      else
-        self.class.instances = 0
-      end
+      self.class.instances ||= 0
+      self.class.instances += 1
     end
   end
 end

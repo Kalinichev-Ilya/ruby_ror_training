@@ -2,9 +2,19 @@
 class Station
   attr_reader :name, :trains
   
+  class << self
+    attr_accessor :stations
+  end
+  @stations = []
+  
   def initialize(name, trains = [])
     @name = name
     @trains = trains
+    self.class.stations << self
+  end
+  
+  def self.all
+    @stations
   end
   
   def add_train(train)
@@ -17,10 +27,6 @@ class Station
   
   def move(train)
     @trains.delete train
-  end
-  
-  def self.all
-    @trains
   end
   
   def to_s
