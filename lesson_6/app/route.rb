@@ -3,11 +3,25 @@ class Route
   attr_reader :stations
   
   def initialize(first, last)
+    @first = first
+    @last = last
+    validate!
     @stations = [first, last]
   end
   
+  def validate!
+    if not_a_station(first) || not_a_station(last)
+      raise ValidationError.new(first, 'The route receives only stations')
+    end
+    true
+  end
+  
+  def valid?
+    validate! ? true : false
+  end
+  
   def add_station(station)
-    @stations.insert(-2, station)
+    @stations.insert(-2, station) if valid?
   end
   
   def delete_station(station)
@@ -20,8 +34,14 @@ class Route
   
   protected
   
+  attr_reader :first, :last
+  
+  def not_a_station(station)
+    station.class != Station
+  end
+  
   def first_station?(station)
-    @stations.index(station) == 0
+    @stations.index(station).zero?
   end
   
   def last_station?(station)

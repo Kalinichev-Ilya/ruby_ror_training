@@ -204,11 +204,14 @@ class Program
   end
   
   def create_train_interface
-    puts 'Enter the train number:'
+    puts 'Enter the train number(format: 123-AA or QWE12):'
     number = gets.chomp
     puts 'Choose type: 1 for cargo, 2 for passenger:'
     type = gets.chomp.to_i
-    create_train(number, type)
+    train = create_train(number, type)
+    unless train.nil?
+      puts "Train number #{train.number} was successfully created."
+    end
   end
   
   def get_station_name
@@ -225,14 +228,20 @@ class Program
   def create_train(number, type)
     @trains << CargoTrain.new(number) if type == 1
     @trains << PassengerTrain.new(number) if type == 2
+  rescue ValidationError => e
+    puts "#{e.message}: #{e.obj}"
   end
   
   def create_station(name)
     @stations << Station.new(name)
+  rescue ValidationError => e
+    puts "#{e.message}: #{e.obj}"
   end
   
   def create_route(start, _end)
     @routes << Route.new(start, _end)
+  rescue ValidationError => e
+    puts "#{e.message}: #{e.obj}"
   end
   
   def delete_route(number)

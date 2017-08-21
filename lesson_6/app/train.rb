@@ -1,4 +1,5 @@
 require_relative 'manufacture'
+require_relative 'exceptions/validation_error'
 
 # Train entity
 class Train
@@ -12,11 +13,21 @@ class Train
   
   def initialize(number)
     @number = number
+    validate!
     @route = nil
     @wagons = []
     @speed = 0
     @station_index = 0
-    self.class.trains[@number] = self
+    self.class.trains[number] = self
+  end
+  
+  def validate!
+    raise ValidationError.new(number, 'Number has invalid format') if does_not_match
+    true
+  end
+  
+  def valid?
+    validate! ? true : false
   end
   
   def self.find(number)
@@ -70,6 +81,12 @@ class Train
   
   # used only in class
   protected
+  
+  FORMAT = /^(\d{3}|[a-z]{3})-*(\d{2}|[a-z]{2})$/i
+  
+  def does_not_match
+    number !~ FORMAT
+  end
   
   def last_station?
     @station_index == @route.stations.count - 1
