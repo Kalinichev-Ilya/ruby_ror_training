@@ -9,13 +9,6 @@ class Route
     @stations = [first, last]
   end
   
-  def validate!
-    if not_a_station(first) || not_a_station(last)
-      raise ValidationError.new(first, 'The route receives only stations')
-    end
-    true
-  end
-  
   def valid?
     validate! ? true : false
   end
@@ -36,7 +29,14 @@ class Route
   
   attr_reader :first, :last
   
-  def not_a_station(station)
+  def validate!
+    if not_a_station?(first) || not_a_station?(last)
+      raise ValidationError.new(first, 'The route receives only stations')
+    end
+    true
+  end
+  
+  def not_a_station?(station)
     station.class != Station
   end
   

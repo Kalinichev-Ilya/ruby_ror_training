@@ -21,11 +21,6 @@ class Train
     self.class.trains[number] = self
   end
   
-  def validate!
-    raise ValidationError.new(number, 'Number has invalid format') if does_not_match
-    true
-  end
-  
   def valid?
     validate! ? true : false
   end
@@ -84,8 +79,13 @@ class Train
   
   FORMAT = /^(\d{3}|[a-z]{3})-*(\d{2}|[a-z]{2})$/i
   
-  def does_not_match
+  def does_not_match?
     number !~ FORMAT
+  end
+
+  def validate!
+    raise ValidationError.new(number, 'Number has invalid format') if does_not_match?
+    true
   end
   
   def last_station?

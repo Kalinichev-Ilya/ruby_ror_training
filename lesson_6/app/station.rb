@@ -16,11 +16,6 @@ class Station
     self.class.stations << self
   end
 
-  def validate!
-    raise ValidationError.new(name, 'Name has invalid format') if does_not_match
-    true
-  end
-
   def valid?
     validate! ? true : false
   end
@@ -52,8 +47,9 @@ class Station
   def does_not_match
     name !~ FORMAT
   end
-  
-  def too_short
-    name.length < 4
+
+  def validate!
+    raise ValidationError.new(name, 'Name has invalid format') if does_not_match
+    true
   end
 end
