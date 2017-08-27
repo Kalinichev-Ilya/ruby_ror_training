@@ -29,6 +29,10 @@ class Train
     @trains[number]
   end
   
+  def wagons_search(&block)
+    wagons.each_with_index { |wagon| yield(wagon) } if block_given?
+  end
+  
   def accelerate(speed)
     @speed = [0, @speed + speed].max
   end
@@ -82,7 +86,7 @@ class Train
   def does_not_match?
     number !~ FORMAT
   end
-
+  
   def validate!
     raise ValidationError.new(number, 'Number has invalid format') if does_not_match?
     true

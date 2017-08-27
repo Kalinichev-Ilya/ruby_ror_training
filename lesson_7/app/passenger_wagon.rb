@@ -1,10 +1,10 @@
 require_relative 'wagon'
+require_relative 'passenger_train'
 
 # Passenger wagon entity
 class PassengerWagon < Wagon
-  attr_reader :type
-  
-  def initialize
+  def initialize(capacity)
+    super
     @type = PassengerTrain
   end
 end

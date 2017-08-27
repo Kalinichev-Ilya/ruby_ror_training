@@ -15,7 +15,11 @@ class Station
     @trains = trains
     self.class.stations << self
   end
-
+  
+  def trains_search(&block)
+    @trains.each { |train| yield(train) } if block_given?
+  end
+  
   def valid?
     validate! ? true : false
   end
@@ -41,13 +45,13 @@ class Station
   end
   
   protected
-
+  
   FORMAT = /^[a-z]+-?\s?[a-z]+$/i
-
+  
   def does_not_match
     name !~ FORMAT
   end
-
+  
   def validate!
     raise ValidationError.new(name, 'Name has invalid format') if does_not_match
     true
