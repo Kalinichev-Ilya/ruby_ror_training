@@ -63,7 +63,7 @@ class Program
           wagon.take_a_place
         else
           puts 'Enter the volume occupied:'
-          volume = gets.chomp.to_i
+          volume = gets.chomp.to_f
           wagon.take_a_place(volume)
         end
       else
@@ -101,7 +101,7 @@ class Program
     if @stations.any?
       @stations.each do |station|
         puts "Station: #{station.name}"
-        station.trains_search do |train|
+        station.each_train do |train|
           "Train number #{train.number}, type: #{train.class}, wagons count: #{train.wagons.count}"
         end
       end
@@ -144,7 +144,7 @@ class Program
       show_list(@trains)
       train_index = gets.chomp.to_i
       puts 'Input amount of free space in wagon:'
-      capacity = gets.chomp.to_i
+      capacity = gets.chomp.to_f
       add_wagon_to_train(train_index, capacity)
     else
       puts 'First create a train'
@@ -375,17 +375,15 @@ class Program
   
   def show_trains_on_station(station_index)
     station = @stations[station_index]
-    station.trains_search do |train|
-      puts "Train number #{train.number}"
+    station.each_train.with_index(1) do |train, index|
+      puts "Train number #{index}, train: #{train.number}"
       show_wagon_list(train)
     end
   end
   
   def show_wagon_list(train)
-    train.wagons_search do |wagon|
-      number = 1
-      puts "wagon number: #{number}, type: #{wagon.type}, free space: #{wagon.free_space}"
-      number + 1
+    train.each_wagons.with_index(1) do |wagon, index|
+      puts "wagon number: #{index}, type: #{wagon.type}, free space: #{wagon.free_space}"
     end
   end
 end

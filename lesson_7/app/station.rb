@@ -16,8 +16,9 @@ class Station
     self.class.stations << self
   end
   
-  def trains_search(&block)
-    @trains.each { |train| yield(train) } if block_given?
+  def each_train
+    return to_enum(:each_train) unless block_given?
+    @trains.each { |train| yield(train) }
   end
   
   def valid?

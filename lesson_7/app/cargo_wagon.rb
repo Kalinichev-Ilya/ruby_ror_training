@@ -9,7 +9,7 @@ class CargoWagon < Wagon
   end
   
   def take_a_place(volume)
-    @occuped_place += volume if there_are_places?(volume)
+    @occuped_place = [@occuped_place + volume, @capacity].min
   end
   
   private
