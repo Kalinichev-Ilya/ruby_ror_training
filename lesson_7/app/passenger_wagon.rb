@@ -9,13 +9,6 @@ class PassengerWagon < Wagon
   end
   
   def take_a_place
-    @occuped_place += 1 if there_are_places?
-  end
-  
-  protected
-  
-  def there_are_places?
-    next_value = @occuped_place + 1
-    next_value <= @capacity
+    @occuped_place = [@occuped_place + 1, @capacity].min
   end
 end
