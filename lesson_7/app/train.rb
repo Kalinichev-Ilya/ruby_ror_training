@@ -29,6 +29,11 @@ class Train
     @trains[number]
   end
   
+  def each_wagon
+    return to_enum(:each_wagon) unless block_given?
+    wagons.each { |wagon| yield(wagon) }
+  end
+  
   def accelerate(speed)
     @speed = [0, @speed + speed].max
   end
@@ -82,7 +87,7 @@ class Train
   def does_not_match?
     number !~ FORMAT
   end
-
+  
   def validate!
     raise ValidationError.new(number, 'Number has invalid format') if does_not_match?
     true

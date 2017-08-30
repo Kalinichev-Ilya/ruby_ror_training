@@ -15,7 +15,12 @@ class Station
     @trains = trains
     self.class.stations << self
   end
-
+  
+  def each_train
+    return to_enum(:each_train) unless block_given?
+    @trains.each { |train| yield(train) }
+  end
+  
   def valid?
     validate! ? true : false
   end
@@ -41,13 +46,13 @@ class Station
   end
   
   protected
-
+  
   FORMAT = /^[a-z]+-?\s?[a-z]+$/i
-
+  
   def does_not_match
     name !~ FORMAT
   end
-
+  
   def validate!
     raise ValidationError.new(name, 'Name has invalid format') if does_not_match
     true

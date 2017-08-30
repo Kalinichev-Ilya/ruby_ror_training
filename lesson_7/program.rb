@@ -18,6 +18,8 @@ class Program
       puts '6. Move train on the road'
       puts '7. Show station list'
       puts '8. Show train list on station'
+      puts '9. Show wagon list by train'
+      puts '10. Take the place in train wagon'
       input = gets.chomp
       
       case input
@@ -37,12 +39,53 @@ class Program
           show_station_list_interface
         when '8'
           show_trains_on_station_by_type_interface
+        when '9'
+          show_wagon_list_by_train
+        when '10'
+          take_the_place_in_train_wagon
       end
       break if input == 'q'
     end
   end
   
   private
+  
+  def take_the_place_in_train_wagon
+    if @trains.any?
+      show_list(@trains)
+      train_index = gets.chomp.to_i
+      train = @trains[train_index]
+      if train.wagons.any?
+        puts "In train #{train.number} #{train.wagons.count} wagons, choose number of wagon:"
+        wagon_index = gets.chomp.to_i
+        wagon = train.wagons[wagon_index-1]
+        if wagon.type == PassengerTrain
+          wagon.take_a_place
+        else
+          puts 'Enter the volume occupied:'
+          volume = gets.chomp.to_f
+          wagon.take_a_place(volume)
+        end
+      else
+        puts 'First add wagon to this train.'
+        add_wagon_to_train_interface
+      end
+    else
+      puts 'First create a train.'
+      create_train_interface
+    end
+  end
+  
+  def show_wagon_list_by_train
+    if @trains.any?
+      show_list(@trains)
+      train_index = gets.chomp.to_i
+      train = @trains[train_index]
+      show_wagon_list(train)
+    else
+      puts "First create train, trains: #{@trains.count}"
+    end
+  end
   
   def show_trains_on_station_by_type_interface
     if @stations.any? && @trains.any?
@@ -56,7 +99,12 @@ class Program
   
   def show_station_list_interface
     if @stations.any?
-      show_list(@stations)
+      @stations.each do |station|
+        puts "Station: #{station.name}"
+        station.each_train do |train|
+          "Train number #{train.number}, type: #{train.class}, wagons count: #{train.wagons.count}"
+        end
+      end
     else
       puts "First create a stations, stations count: #{@stations.count}"
     end
@@ -95,9 +143,12 @@ class Program
     if @trains.any?
       show_list(@trains)
       train_index = gets.chomp.to_i
-      add_wagon_to_train(train_index)
+      puts 'Input amount of free space in wagon:'
+      capacity = gets.chomp
+      add_wagon_to_train(train_index, capacity)
     else
       puts 'First create a train'
+      create_train_interface
     end
   end
   
@@ -271,11 +322,17 @@ class Program
     puts "Train #{train} was assign on the station #{station} from route #{route}"
   end
   
-  def add_wagon_to_train(train_index)
+  def add_wagon_to_train(train_index, capacity)
     train = @trains[train_index]
-    train.add_wagon(CargoWagon.new) if train.class == CargoTrain
-    train.add_wagon(PassengerWagon.new) if train.class == PassengerTrain
-    puts 'Added wagon'
+    wagon = create_wagon(train, capacity)
+    train.add_wagon(wagon)
+    puts "Added wagon with #{wagon.free_space} space."
+  end
+  
+  def create_wagon(train, capacity)
+    wagon = CargoWagon.new(capacity) if train.class == CargoTrain
+    wagon = PassengerWagon.new(capacity) if train.class == PassengerTrain
+    wagon
   end
   
   def remove_wagon_from_train(train_index)
@@ -318,17 +375,15 @@ class Program
   
   def show_trains_on_station(station_index)
     station = @stations[station_index]
-    cargo = station.trains_by_type(CargoTrain)
-    passenger = station.trains_by_type(PassengerTrain)
-    puts 'There are no cargo trains at this station.' unless cargo.any?
-    puts 'There are no passenger trains at this station.' unless passenger.any?
-    if cargo.any?
-      puts "Cargo (#{cargo.count})"
-      show_list(cargo)
+    station.each_train.with_index(1) do |train, index|
+      puts "Train number #{index}, train: #{train.number}"
+      show_wagon_list(train)
     end
-    if passenger.any?
-      puts "Passenger (#{passenger.count})"
-      show_list(passenger)
+  end
+  
+  def show_wagon_list(train)
+    train.each_wagon.with_index(1) do |wagon, index|
+      puts "wagon number: #{index}, type: #{wagon.type}, free space: #{wagon.free_space}"
     end
   end
 end
