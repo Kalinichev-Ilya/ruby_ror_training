@@ -31,7 +31,7 @@ class Train
   
   def each_wagon
     return to_enum(:each_wagon) unless block_given?
-    wagons.each_with_index { |wagon| yield(wagon) }
+    wagons.each { |wagon| yield(wagon) }
   end
   
   def accelerate(speed)

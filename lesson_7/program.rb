@@ -144,7 +144,7 @@ class Program
       show_list(@trains)
       train_index = gets.chomp.to_i
       puts 'Input amount of free space in wagon:'
-      capacity = gets.chomp.to_f
+      capacity = gets.chomp
       add_wagon_to_train(train_index, capacity)
     else
       puts 'First create a train'
@@ -382,7 +382,7 @@ class Program
   end
   
   def show_wagon_list(train)
-    train.each_wagons.with_index(1) do |wagon, index|
+    train.each_wagon.with_index(1) do |wagon, index|
       puts "wagon number: #{index}, type: #{wagon.type}, free space: #{wagon.free_space}"
     end
   end
