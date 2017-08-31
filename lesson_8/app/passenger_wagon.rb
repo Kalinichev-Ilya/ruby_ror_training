@@ -7,7 +7,7 @@ class PassengerWagon < Wagon
     super
     @type = PassengerTrain
   end
-  
+
   def take_a_place
     @occuped_place = [@occuped_place + 1, @capacity].min
   end

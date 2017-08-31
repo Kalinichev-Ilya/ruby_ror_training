@@ -7,7 +7,7 @@ class CargoWagon < Wagon
     super
     @type = CargoTrain
   end
-  
+
   def take_a_place(volume)
     @occuped_place = [@occuped_place + volume, @capacity].min
   end

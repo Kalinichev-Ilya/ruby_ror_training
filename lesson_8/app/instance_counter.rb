@@ -3,11 +3,11 @@ module InstanceCounter
     base.extend ClassMethods
     base.send :include, InstanceMethods
   end
-  
+
   module ClassMethods
     attr_accessor :instances
   end
-  
+
   module InstanceMethods
     def register_instance
       self.class.instances ||= 0
