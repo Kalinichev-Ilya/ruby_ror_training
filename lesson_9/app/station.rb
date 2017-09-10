@@ -1,8 +1,11 @@
 require_relative 'exceptions/validation_error'
+require_relative 'accessors'
 
 # Station entity
 class Station
-  attr_reader :name, :trains
+  extend Accessors
+  attr_reader :trains
+  strong_attr_acessor name: String
 
   class << self
     attr_accessor :stations

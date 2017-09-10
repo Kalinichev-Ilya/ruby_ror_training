@@ -1,10 +1,11 @@
 require_relative 'manufacture'
-
+require_relative 'accessors'
 # Wagon entity
 class Wagon
   include Manufacture
-  attr_reader :type, :occuped_place, :capacity
-
+  extend Accessors
+  attr_accessor_with_history :type, :occuped_place, :capacity
+  
   def initialize(capacity = 0)
     @capacity = capacity
     @occuped_place = 0
@@ -16,6 +17,6 @@ class Wagon
   end
 
   def take_a_place
-    raise NotImplementedError
+    raise NotImplementedError, 'Method is not defined'
   end
 end
