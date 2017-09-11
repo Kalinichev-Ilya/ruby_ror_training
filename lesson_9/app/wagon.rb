@@ -1,4 +1,4 @@
-require_relative 'manufacture'
+require_relative 'modules/manufacture'
 
 # Wagon entity
 class Wagon
