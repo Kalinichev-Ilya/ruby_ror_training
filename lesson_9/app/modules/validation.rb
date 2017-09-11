@@ -3,16 +3,16 @@ module Validation
     base.extend ClassMethods
     base.send :include, InstanceMethods
   end
-  
+
   module ClassMethods
     attr_reader :validations
-    
+
     def validate(name, prop = {})
       @validations ||= Hash.new({})
       validations[name] = prop
     end
   end
-  
+
   module InstanceMethods
     def validate!
       self.class.validations.each do |name, properties|
@@ -32,27 +32,27 @@ module Validation
         end
       end
     end
-    
+
     def valid?
       validate! ? true : false
     end
   end
-  
+
   protected
-  
+
   def value(var)
     instance_variable_get("@#{var}")
   end
-  
+
   def value_presence?(name)
     value = value(name)
     !(value.nil? || value == '')
   end
-  
+
   def valid_format?(name, regexp)
     value(name) =~ regexp
   end
-  
+
   def valid_class?(name, class_name)
     value(name).class.is_a? class_name
   end

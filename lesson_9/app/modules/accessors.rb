@@ -3,22 +3,22 @@ module Accessors
     methods.each do |method|
       name = "@#{method}".to_sym
       define_method(method) { instance_variable_get(name) }
-      
+
       container_name = "@#{method}_history".to_sym
       define_method("#{method}=") do |var|
         instance_variable_set(container_name, []) unless instance_variable_defined?(container_name)
         instance_variable_get(container_name) << var
         instance_variable_set(name, var)
       end
-      
+
       define_method("#{method}_history") do
         instance_variable_set(container_name, []) unless instance_variable_defined?(container_name)
         instance_variable_get(container_name)
       end
     end
   end
-  
-  def strong_attr_acessor(methods)
+
+  def strong_attr_accessor(methods)
     methods.each do |method, class_type|
       name = "@#{method}".to_sym
       define_method(method) { instance_variable_get(name) }
