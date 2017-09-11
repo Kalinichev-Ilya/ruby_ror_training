@@ -1,4 +1,4 @@
-require_relative 'manufacture'
+require_relative 'modules/manufacture'
 require_relative 'exceptions/validation_error'
 
 # Train entity
