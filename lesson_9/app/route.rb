@@ -1,16 +1,22 @@
+require_relative 'modules/validation'
+require_relative 'modules/accessors'
+require_relative 'station'
+
 # Route entity
 class Route
-  attr_reader :stations
+  include Validation
+  extend Accessors
+  
+  attr_reader :stations, :first, :last
+
+  validate :first, type: Station
+  validate :last, type: Station
 
   def initialize(first, last)
     @first = first
     @last = last
     validate!
     @stations = [first, last]
-  end
-
-  def valid?
-    validate! ? true : false
   end
 
   def add_station(station)
@@ -26,20 +32,7 @@ class Route
   end
 
   protected
-
-  attr_reader :first, :last
-
-  def validate!
-    if not_a_station?(first) || not_a_station?(last)
-      raise ValidationError.new(first, 'The route receives only stations')
-    end
-    true
-  end
-
-  def not_a_station?(station)
-    station.class != Station
-  end
-
+  
   def first_station?(station)
     @stations.index(station).zero?
   end
