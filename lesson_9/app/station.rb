@@ -29,10 +29,6 @@ class Station
     @trains.each { |train| yield(train) }
   end
   
-  def valid?
-    validate! ? true : false
-  end
-  
   def self.all
     @stations
   end

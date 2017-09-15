@@ -7,7 +7,8 @@ class Train
   include Manufacture
   include Validation
   
-  attr_reader :number, :wagons, :route, :speed, :station_index
+  attr_reader :number, :wagons, :route, :station_index
+  attr_accessor_with_history :speed
   
   validate :number, format: /^(\d{3}|[a-z]{3})-*(\d{2}|[a-z]{2})$/i
 
