@@ -1,11 +1,13 @@
 require_relative 'modules/manufacture'
 require_relative 'modules/validation'
+require_relative 'modules/accessors'
 require_relative 'exceptions/validation_error'
 
 # Train entity
 class Train
   include Manufacture
   include Validation
+  extend Accessors
   
   attr_reader :number, :wagons, :route, :station_index
   attr_accessor_with_history :speed
