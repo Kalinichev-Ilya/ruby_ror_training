@@ -3,21 +3,25 @@ module Validation
     base.extend ClassMethods
     base.send :include, InstanceMethods
   end
-
+  
   module ClassMethods
-    attr_reader :validations
-
+    attr_accessor :validations
+    
     def validate(name, prop = {})
-      @validations ||= Hash.new({})
+      @validations ||= Hash.new( {} )
       validations[name] = prop
     end
+    
+    def inherited(sub)
+      sub.validations = @validations
+    end
   end
-
+  
   module InstanceMethods
     def validate!
       self.class.validations.each do |name, properties|
         properties.each do |type, prop|
-          if type ==  :presence
+          if type == :presence
             message = "Value of attribute: #{name} is nil or empty"
             raise ArgumentError, message unless value_presence? name
           elsif type == :format
@@ -32,28 +36,29 @@ module Validation
         end
       end
     end
-
+    
     def valid?
       validate! ? true : false
     end
   end
-
+  
   protected
-
+  
   def value(var)
     instance_variable_get("@#{var}")
   end
-
-  def value_presence?(name)
-    value = value(name)
+  
+  def value_presence?(attr)
+    value = value(attr)
     !(value.nil? || value == '')
   end
-
-  def valid_format?(name, regexp)
-    value(name) =~ regexp
+  
+  def valid_format?(attr, regexp)
+    value(attr) =~ regexp
   end
-
-  def valid_class?(name, class_name)
-    value(name).class.is_a? class_name
+  
+  def valid_class?(attr, class_name)
+    self_class = value(attr).class
+    self_class == class_name
   end
 end
