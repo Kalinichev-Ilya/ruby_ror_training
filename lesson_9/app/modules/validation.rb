@@ -3,62 +3,52 @@ module Validation
     base.extend ClassMethods
     base.send :include, InstanceMethods
   end
-  
+
   module ClassMethods
     attr_accessor :validations
-    
+
     def validate(name, prop = {})
-      @validations ||= Hash.new( {} )
+      @validations ||= {}
       validations[name] = prop
     end
-    
+
     def inherited(sub)
       sub.validations = @validations
     end
   end
-  
+
   module InstanceMethods
     def validate!
       self.class.validations.each do |name, properties|
-        properties.each do |type, prop|
-          if type == :presence
-            message = "Value of attribute: #{name} is nil or empty"
-            raise ArgumentError, message unless value_presence? name
-          elsif type == :format
-            message = "Value of attribute name: #{name}, doesn't match with format: #{prop}"
-            raise ArgumentError, message unless valid_format?(name, prop)
-          elsif type == :type
-            message = "Value of attribute name: #{name}, doesn't match the specified class: #{prop}"
-            raise ArgumentError, message unless valid_class?(name, prop)
-          else
-            raise ArgumentError, "Unknown attribute type name: #{name}"
-          end
-        end
+        properties.each { |type, prop| send type, name, prop }
       end
     end
-    
+
     def valid?
       validate! ? true : false
     end
   end
-  
+
   protected
-  
+
   def value(var)
     instance_variable_get("@#{var}")
   end
-  
-  def value_presence?(attr)
-    value = value(attr)
-    !(value.nil? || value == '')
+
+  def presence(*attr)
+    value = value(attr.first)
+    message = "Value of attribute: #{attr.first} is nil or empty"
+    raise ArgumentError, message if value.nil? || value == ''
   end
-  
-  def valid_format?(attr, regexp)
-    value(attr) =~ regexp
+
+  def format(attr, regexp)
+    message = "Value of attribute name: #{attr}, doesn't match with format: #{regexp}"
+    raise ArgumentError, message unless value(attr) =~ regexp
   end
-  
-  def valid_class?(attr, class_name)
+
+  def type(attr, class_name)
     self_class = value(attr).class
-    self_class == class_name
+    message = "Value of attribute name: #{attr}, doesn't match the specified class: #{class_name}"
+    raise ArgumentError, message unless self_class == class_name
   end
 end
