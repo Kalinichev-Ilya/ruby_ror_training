@@ -8,11 +8,14 @@ class Train
   include Manufacture
   include Validation
   extend Accessors
-  
+
   attr_reader :number, :wagons, :route, :station_index
   attr_accessor_with_history :speed
-  
-  validate :number, format: /^(\d{3}|[a-z]{3})-*(\d{2}|[a-z]{2})$/i
+
+  validate :number,
+           format: /^(\d{3}|[a-z]{3})-*(\d{2}|[a-z]{2})$/i,
+           presence: true,
+           type: String
 
   class << self
     attr_accessor :trains
