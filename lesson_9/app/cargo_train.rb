@@ -4,6 +4,8 @@ require_relative 'train'
 class CargoTrain < Train
   @trains = {}
   
+  validate :number, type: String
+  
   def initialize(number)
     super(number)
   end

@@ -8,8 +8,9 @@ module Validation
     attr_accessor :validations
 
     def validate(name, prop = {})
-      @validations ||= {}
-      validations[name] = prop
+      @validations ||= {} if validations.nil?
+      validations[name] = [] if validations[name].nil?
+      validations[name] << prop unless validations[name].include? prop
     end
 
     def inherited(sub)
@@ -19,9 +20,13 @@ module Validation
 
   module InstanceMethods
     def validate!
-      self.class.validations.each do |name, properties|
+      checks = self.class.validations
+      puts "#{checks}"
+      Hash(checks).each do |name, properties|
         value = instance_variable_get("@#{name}")
-        properties.each { |type, prop| send type, value, prop }
+        properties.each do |validation|
+          validation.each { |type, prop| send type, value, prop }
+        end
       end
     end
 
@@ -36,8 +41,8 @@ module Validation
   protected
 
   def presence(attr, *)
-    message = "Value of attribute: #{attr.first} is nil or empty"
-    raise ArgumentError, message if attr.first || value == ''
+    message = "Value of attribute: #{attr} is nil or empty"
+    raise ArgumentError, message if attr || value == ''
   end
 
   def format(attr, regexp)
@@ -47,6 +52,6 @@ module Validation
 
   def type(attr, class_name)
     message = "Value of attribute name: #{attr}, doesn't match the specified class: #{class_name}"
-    raise ArgumentError, message unless attr.class == class_name
+    raise ArgumentError, message unless attr.is_a?(class_name)
   end
 end

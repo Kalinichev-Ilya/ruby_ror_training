@@ -13,9 +13,7 @@ class Train
   attr_accessor_with_history :speed
 
   validate :number,
-           format: /^(\d{3}|[a-z]{3})-*(\d{2}|[a-z]{2})$/i,
-           presence: true,
-           type: String
+           format: /^(\d{3}|[a-z]{3})-*(\d{2}|[a-z]{2})$/i
 
   class << self
     attr_accessor :trains
